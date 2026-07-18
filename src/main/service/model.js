@@ -37,6 +37,10 @@ async function addModel(modelName, videoPath) {
   }
   const audioPath = path.join(assetPath.ttsTrain, modelFileName.replace(extname, '.wav'))
   return extractAudio(modelPath, audioPath).then(() => {
+    if (!fs.existsSync(audioPath)) {
+      throw new Error(`audio extract failed: ${audioPath}`)
+    }
+
     // 训练语音模型
     const relativeAudioPath = path.relative(assetPath.ttsRoot, audioPath)
     if (process.env.NODE_ENV === 'development') {
@@ -46,6 +50,10 @@ async function addModel(modelName, videoPath) {
       return trainVoice(relativeAudioPath, 'zh')
     }
   }).then((voiceId)=>{
+    if (typeof voiceId !== 'number' && typeof voiceId !== 'bigint') {
+      throw new Error(`invalid voice id: ${voiceId}`)
+    }
+
     // 插入模特信息
     const relativeModelPath = path.relative(assetPath.model, modelPath)
     const relativeAudioPath = path.relative(assetPath.ttsRoot, audioPath)

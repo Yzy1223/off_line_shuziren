@@ -2,6 +2,121 @@
 
 🔗 **Office website:** [www.duix.com](http://www.duix.com)
 
+## Fork MVP Quick Start
+
+This fork adds a local web MVP on top of the original Duix.Avatar project.
+
+Main additions:
+
+- Douyin link parsing and download
+- audio extraction and ASR transcription
+- copy rewriting with Bailian models
+- local digital human training and generation
+- matrix account management and browser-assisted publishing
+
+### Prerequisites
+
+- Windows + Docker Desktop
+- Node.js 18+
+- npm 9+
+- NVIDIA GPU environment for the three Duix containers
+- Local folders:
+  - `D:\duix_avatar_data\voice\data`
+  - `D:\duix_avatar_data\face2face`
+
+### 1. Pull Docker images
+
+```bash
+docker pull guiji2025/fun-asr
+docker pull guiji2025/fish-speech-ziming
+docker pull guiji2025/duix.avatar
+```
+
+### 2. Start local AI services
+
+Run in the repo root:
+
+```bash
+docker compose -f deploy/docker-compose.yml up -d
+```
+
+Service ports:
+
+- `18180` -> local TTS
+- `10095` -> local ASR
+- `8383` -> local avatar generation
+
+### 3. Install dependencies
+
+```bash
+npm install
+npm --prefix apps/server install
+npm --prefix apps/web install
+```
+
+### 4. Configure backend env
+
+Copy `apps/server/src/config/env.example` to `apps/server/.env`, then fill in your own values.
+
+Required values:
+
+- `BAILIAN_API_KEY`
+- `BAILIAN_ASR_MODEL`
+- `BAILIAN_REWRITE_MODEL`
+- `ALIYUN_OSS_ENDPOINT`
+- `ALIYUN_OSS_BUCKET`
+- `ALIYUN_OSS_ACCESS_KEY_ID`
+- `ALIYUN_OSS_ACCESS_KEY_SECRET`
+- `LOCAL_TTS_BASE_URL`
+- `LOCAL_AVATAR_BASE_URL`
+- `LOCAL_TTS_DATA_ROOT`
+- `LOCAL_FACE2FACE_TEMP_ROOT`
+
+Optional Douyin / MediaCrawler values:
+
+- `MEDIACRAWLER_ENABLED`
+- `MEDIACRAWLER_ROOT`
+- `MEDIACRAWLER_PYTHON`
+- `MEDIACRAWLER_LOGIN_TYPE`
+- `MEDIACRAWLER_COOKIES`
+- `MEDIACRAWLER_HEADLESS`
+- `DOUYIN_COOKIE_BROWSER`
+- `DOUYIN_COOKIES_FILE`
+
+### 5. Start backend
+
+```bash
+npm run server:start
+```
+
+Backend default:
+
+- `http://127.0.0.1:3010`
+
+### 6. Start web frontend
+
+Open another terminal:
+
+```bash
+npm run web:dev
+```
+
+Frontend default:
+
+- `http://127.0.0.1:5173`
+
+### 7. Optional: start the original Electron client
+
+```bash
+npm run dev
+```
+
+### Notes
+
+- Do not commit `apps/server/.env`.
+- Do not commit files under `runtime/` or `apps/server/runtime/`.
+- Cloning this repository is not enough on a new machine. The Docker services must also be pulled and started.
+
 # Table of Contents
 
 1. [What's Duix.Avatar](#1-whats-Duix.Avatar)

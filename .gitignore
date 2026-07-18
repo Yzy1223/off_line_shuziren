@@ -4,3 +4,12 @@ out
 .idea
 .DS_Store
 *.log*
+apps/*/node_modules
+apps/*/dist
+apps/server/.env
+apps/server/runtime/*
+apps/server/backend-*.log
+apps/web/frontend-*.log
+apps/web/web-runtime.log
+runtime/*
+!runtime/.gitkeep
